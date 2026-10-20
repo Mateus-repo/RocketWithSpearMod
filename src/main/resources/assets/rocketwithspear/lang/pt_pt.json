@@ -1,0 +1,12 @@
+{
+	"key.rocketwithspear.use_rocket": "Usar foguete (enquanto carrega a spear)",
+	"config.rocketwithspear.title": "Rocket With Spear",
+	"config.rocketwithspear.enabled": "Ativado: %s",
+	"config.rocketwithspear.requireFlying": "Exigir a voar (elytra): %s",
+	"config.rocketwithspear.requireSpear": "Exigir spear a carregar: %s",
+	"config.rocketwithspear.allowServer": "Usar no servidor se disponível: %s",
+	"config.rocketwithspear.hand": "Mão preferida: %s",
+	"config.rocketwithspear.on": "Sim",
+	"config.rocketwithspear.off": "Não",
+	"config.rocketwithspear.done": "Concluído"
+}

@@ -1,0 +1,12 @@
+{
+	"key.rocketwithspear.use_rocket": "Use Rocket (while charging spear)",
+	"config.rocketwithspear.title": "Rocket With Spear",
+	"config.rocketwithspear.enabled": "Enabled: %s",
+	"config.rocketwithspear.requireFlying": "Require flying (elytra): %s",
+	"config.rocketwithspear.requireSpear": "Require spear charging: %s",
+	"config.rocketwithspear.allowServer": "Use server-side when available: %s",
+	"config.rocketwithspear.hand": "Preferred hand: %s",
+	"config.rocketwithspear.on": "On",
+	"config.rocketwithspear.off": "Off",
+	"config.rocketwithspear.done": "Done"
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "rocketwithspear",
+  "version": "${version}",
+  "name": "Rocket With Spear",
+  "description": "Use firework rockets while charging a spear with a dedicated keybind.",
+  "authors": ["Strefiz"],
+  "license": "MIT",
+  "icon": "assets/rocketwithspear/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.strefiz.rocketwithspear.RocketWithSpearMod"
+    ],
+    "client": [
+      "com.strefiz.rocketwithspear.RocketWithSpearClient"
+    ],
+    "modmenu": [
+      "com.strefiz.rocketwithspear.compat.ModMenuIntegration"
+    ]
+  },
+  "custom": {
+    "modmenu": {
+      "badges": ["client"]
+    }
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "~26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}
