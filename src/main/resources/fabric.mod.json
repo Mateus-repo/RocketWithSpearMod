@@ -19,11 +19,9 @@
       "com.strefiz.rocketwithspear.compat.ModMenuIntegration"
     ]
   },
-  "custom": {
-    "modmenu": {
-      "badges": ["client"]
-    }
-  },
+  "mixins": [
+    "rocketwithspear.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.19.5",
     "minecraft": "~26.3",

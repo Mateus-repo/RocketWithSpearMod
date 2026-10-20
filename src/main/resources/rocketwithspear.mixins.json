@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.strefiz.rocketwithspear.mixin.client",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "RocketWithSpearOptionsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

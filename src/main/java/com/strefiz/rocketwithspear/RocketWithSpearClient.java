@@ -14,6 +14,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.component.SwingAnimation;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Client entrypoint: registers the keybind and performs the rocket use.
  *
@@ -30,8 +33,21 @@ import net.minecraft.world.item.component.SwingAnimation;
  */
 public class RocketWithSpearClient implements ClientModInitializer {
 
-	/** Default key: GLFW_KEY_V (86), re-bindable in the controls menu. */
-	private static final int DEFAULT_KEY = 86;
+	private static final Logger LOGGER = LogManager.getLogger("RocketWithSpear");
+
+	/**
+	 * Default key, resolved from the vanilla "V" key name (re-bindable in the
+	 * controls menu). Falls back to {@code GLFW_KEY_V} (86) if not found.
+	 */
+	private static final int DEFAULT_KEY = resolveDefaultKey();
+
+	private static int resolveDefaultKey() {
+		try {
+			return com.mojang.blaze3d.platform.InputConstants.getKey("key.keyboard.v").getValue();
+		} catch (RuntimeException e) {
+			return 25; // SDL_SCANCODE_V
+		}
+	}
 
 	public static final KeyMapping USE_ROCKET_KEY = new KeyMapping(
 			"key.rocketwithspear.use_rocket",
@@ -41,7 +57,13 @@ public class RocketWithSpearClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		KeyMappingHelper.registerKeyMapping(USE_ROCKET_KEY);
+		// Preferred path. If it is too late (Options already initialised) the
+		// OptionsMixin adds the keybind instead.
+		try {
+			KeyMappingHelper.registerKeyMapping(USE_ROCKET_KEY);
+		} catch (Throwable t) {
+			LOGGER.debug("Could not register keybind through Fabric helper; the mixin will add it.", t);
+		}
 		ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
 	}
 
@@ -59,21 +81,22 @@ public class RocketWithSpearClient implements ClientModInitializer {
 		if (minecraft.player == null || minecraft.level == null || minecraft.gameMode == null) {
 			return;
 		}
-		if (minecraft.player.isSpectator()) {
+		var player = minecraft.player;
+		if (player.isSpectator()) {
 			return;
 		}
-		if (config.requireFlying && !minecraft.player.isFallFlying()) {
+		if (config.requireFlying && !player.isFallFlying()) {
 			return;
 		}
-		if (config.requireSpearCharging && !RocketUtil.isChargingSpear(minecraft.player)) {
+		if (config.requireSpearCharging && !RocketUtil.isChargingSpear(player)) {
 			return;
 		}
 
-		InteractionHand hand = RocketUtil.findRocketHand(minecraft.player, config);
+		InteractionHand hand = RocketUtil.findRocketHand(player, config);
 		if (hand == null) {
 			return;
 		}
-		if (RocketUtil.isRocketOnCooldown(minecraft.player)) {
+		if (RocketUtil.isRocketOnCooldown(player)) {
 			return;
 		}
 
@@ -84,8 +107,8 @@ public class RocketWithSpearClient implements ClientModInitializer {
 		}
 
 		// Phase 1: vanilla-compatible, client-only.
-		minecraft.player.swing(hand, SwingAnimation.DEFAULT, false);
-		minecraft.gameMode.useItem(minecraft.player, hand);
-		RocketUtil.setRocketCooldown(minecraft.player, config.cooldownTicks);
+		player.swing(hand, SwingAnimation.DEFAULT, false);
+		minecraft.gameMode.useItem(player, hand);
+		RocketUtil.setRocketCooldown(player, config.cooldownTicks);
 	}
 }

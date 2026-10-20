@@ -3,8 +3,10 @@ package com.strefiz.rocketwithspear.network;
 import com.strefiz.rocketwithspear.config.ModConfig;
 import com.strefiz.rocketwithspear.util.RocketUtil;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -20,13 +22,18 @@ public final class ModNetworking {
 	}
 
 	public static void register() {
+		// C2S payload type must be registered on both sides (client sends,
+		// server receives).
 		PayloadTypeRegistry.serverboundPlay().register(UseRocketPayload.TYPE, UseRocketPayload.CODEC);
 
-		ServerPlayNetworking.registerGlobalReceiver(UseRocketPayload.TYPE, (payload, context) -> {
-			ServerPlayer player = context.player();
-			InteractionHand hand = payload.hand();
-			context.server().execute(() -> handleUseRocket(player, hand));
-		});
+		// The receiver only makes sense on a dedicated/integrated server.
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+			ServerPlayNetworking.registerGlobalReceiver(UseRocketPayload.TYPE, (payload, context) -> {
+				ServerPlayer player = context.player();
+				InteractionHand hand = payload.hand();
+				context.server().execute(() -> handleUseRocket(player, hand));
+			});
+		}
 	}
 
 	private static void handleUseRocket(ServerPlayer player, InteractionHand hand) {

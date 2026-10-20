@@ -2,6 +2,7 @@ package com.strefiz.rocketwithspear.util;
 
 import com.strefiz.rocketwithspear.config.ModConfig;
 
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,13 +21,18 @@ public final class RocketUtil {
 		return !stack.isEmpty() && stack.getItem() == Items.FIREWORK_ROCKET;
 	}
 
-	/** True when the player is currently charging a trident/spear. */
+	/**
+	 * True when the player is currently charging a spear or trident.
+	 *
+	 * <p>Minecraft 26.x introduced the spear weapons (tagged {@code SPEARS}) in
+	 * addition to the trident, so both are accepted.
+	 */
 	public static boolean isChargingSpear(Player player) {
 		if (!player.isUsingItem()) {
 			return false;
 		}
 		ItemStack used = player.getItemInHand(player.getUsedItemHand());
-		return used.getItem() == Items.TRIDENT;
+		return used.typeHolder().is(ItemTags.SPEARS) || used.getItem() == Items.TRIDENT;
 	}
 
 	/**

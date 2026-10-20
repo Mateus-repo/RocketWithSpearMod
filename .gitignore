@@ -38,3 +38,8 @@ coverage/
 *.log
 .godot/
 .import/
+
+# Minecraft / Gradle development artifacts
+.gradle/
+run/
+.mixin.out/
